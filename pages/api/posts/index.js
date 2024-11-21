@@ -2,6 +2,7 @@ import clientPromise from '../../../lib/mongodb';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { runMiddleware } from '../../../lib/cors'; // Import the runMiddleware helper
 
 // Configure Multer for file storage
 const storage = multer.diskStorage({
@@ -44,12 +45,14 @@ export const config = {
 
 // API handler
 export default async function handler(req, res) {
+  // Apply CORS middleware to the request
+  await runMiddleware(req, res, cors);
+
   const client = await clientPromise;
   const db = client.db();
   const collection = db.collection('posts');
 
   if (req.method === 'GET') {
-    // GET logic remains unchanged
     const { page = 1, limit = 5, userId } = req.query;
     const skip = (page - 1) * limit;
 
@@ -68,44 +71,46 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Failed to fetch posts', details: error.message });
     }
   } else if (req.method === 'POST') {
-    // Multer handling for image upload
     const uploadMiddleware = upload.single('image');
-uploadMiddleware(req, res, async (err) => {
-  if (err) {
-    console.error('Error during image upload:', err.message);
-    return res.status(400).json({ error: err.message });
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        console.error('Error during image upload:', err.message);
+        return res.status(400).json({ error: err.message });
+      }
+
+      console.log('Request body:', req.body);  // Log body fields
+      console.log('Uploaded file:', req.file);  // Log file data
+
+      try {
+        const { title, description, content, userId } = req.body;
+
+        if (!title || !description || !content || !userId) {
+          return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const image = req.file ? `/uploads/${req.file.filename}` : null;
+
+        if (!image) {
+          return res.status(400).json({ error: 'Image upload failed or missing.' });
+        }
+
+        const post = {
+          title,
+          description,
+          content,
+          userId,
+          image, // Save image path
+          createdAt: new Date(),
+        };
+
+        const result = await collection.insertOne(post);
+        res.status(201).json({ post: { ...post, _id: result.insertedId } });
+      } catch (error) {
+        console.error('Error during POST', error.message);
+        res.status(500).json({ error: 'Failed to create post', details: error.message });
+      }
+    });
+  } else {
+    res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
-
-  console.log('Request body:', req.body);  // Log body fields
-  console.log('Uploaded file:', req.file);  // Log file data
-
-  try {
-    const { title, description, content, userId } = req.body;
-
-    if (!title || !description || !content || !userId) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
-
-    if (!image) {
-      return res.status(400).json({ error: 'Image upload failed or missing.' });
-    }
-
-    const post = {
-      title,
-      description,
-      content,
-      userId,
-      image, // Save image path
-      createdAt: new Date(),
-    };
-
-    const result = await collection.insertOne(post);
-    res.status(201).json({ post: { ...post, _id: result.insertedId } });
-  } catch (error) {
-    console.error('Error during POST', error.message);
-    res.status(500).json({ error: 'Failed to create post', details: error.message });
-  }
-})}
 }
