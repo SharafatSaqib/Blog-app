@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import styles from './CreatePost.module.scss'; // Import SCSS module
 import axios from 'axios';
-
+import { API_ENDPOINTS } from '../utils/constants';
 export default function CreatePost() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function CreatePost() {
   
     try {
       // Send the post data and image to the backend
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts`, postData, {
+      const response = await axios.post(API_ENDPOINTS.POSTS, postData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

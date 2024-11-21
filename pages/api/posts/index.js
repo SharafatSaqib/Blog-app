@@ -101,7 +101,7 @@ export default async function handler(req, res) {
         const result = await collection.insertOne(post);
         res.status(201).json({ post: { ...post, _id: result.insertedId } });
       } catch (error) {
-        console.error('Error during POST /api/posts:', error.message);
+        console.error('Error during POST', error.message);
         res.status(500).json({ error: 'Failed to create post', details: error.message });
       }
     });
