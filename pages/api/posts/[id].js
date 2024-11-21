@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   try {
     const client = await clientPromise; // Ensure clientPromise resolves correctly
-    const db = client.db(process.env.DB_NAME); // Ensure DB_NAME is defined in .env.local
+    const db = client.db(process.env.MONGO_URI); 
 
     const post = await db.collection('posts').findOne({ _id: new ObjectId(id) });
     if (!post) {
