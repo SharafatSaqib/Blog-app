@@ -46,7 +46,7 @@ export const config = {
 };
 
 // API handler with CORS middleware
-export async function handler(req, res) {
+export default async function handler(req, res) {
   // Apply CORS middleware
   await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve(result))));
 
