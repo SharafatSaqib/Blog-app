@@ -70,42 +70,42 @@ export default async function handler(req, res) {
   } else if (req.method === 'POST') {
     // Multer handling for image upload
     const uploadMiddleware = upload.single('image');
-    uploadMiddleware(req, res, async (err) => {
-      if (err) {
-        console.error('Error during image upload:', err.message);
-        return res.status(400).json({ error: err.message });
-      }
-
-      try {
-        const { title, description, content, userId } = req.body;
-
-        if (!title || !description || !content || !userId) {
-          return res.status(400).json({ error: 'Missing required fields' });
-        }
-
-        const image = req.file ? `/uploads/${req.file.filename}` : null;
-
-        if (!image) {
-          return res.status(400).json({ error: 'Image upload failed or missing.' });
-        }
-
-        const post = {
-          title,
-          description,
-          content,
-          userId,
-          image, // Save image path
-          createdAt: new Date(),
-        };
-
-        const result = await collection.insertOne(post);
-        res.status(201).json({ post: { ...post, _id: result.insertedId } });
-      } catch (error) {
-        console.error('Error during POST', error.message);
-        res.status(500).json({ error: 'Failed to create post', details: error.message });
-      }
-    });
-  } else {
-    res.status(405).json({ error: `Method ${req.method} not allowed` });
+uploadMiddleware(req, res, async (err) => {
+  if (err) {
+    console.error('Error during image upload:', err.message);
+    return res.status(400).json({ error: err.message });
   }
+
+  console.log('Request body:', req.body);  // Log body fields
+  console.log('Uploaded file:', req.file);  // Log file data
+
+  try {
+    const { title, description, content, userId } = req.body;
+
+    if (!title || !description || !content || !userId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!image) {
+      return res.status(400).json({ error: 'Image upload failed or missing.' });
+    }
+
+    const post = {
+      title,
+      description,
+      content,
+      userId,
+      image, // Save image path
+      createdAt: new Date(),
+    };
+
+    const result = await collection.insertOne(post);
+    res.status(201).json({ post: { ...post, _id: result.insertedId } });
+  } catch (error) {
+    console.error('Error during POST', error.message);
+    res.status(500).json({ error: 'Failed to create post', details: error.message });
+  }
+})}
 }
