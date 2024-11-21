@@ -18,6 +18,7 @@ export default function CreatePost() {
   const [image, setImage] = useState(null); // For image file
   const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
   const [error, setError] = useState(null); // For handling error messages
+  const [success, setSuccess] = useState(null); // For handling success messages
 
   // Handle image file change
   const handleImageChange = (e) => {
@@ -27,8 +28,9 @@ export default function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Clear previous errors
+    // Clear previous errors and success messages
     setError(null);
+    setSuccess(null);
     
     // Form validation
     if (!title || !description || !content) {
@@ -50,14 +52,20 @@ export default function CreatePost() {
     postData.append('image', image); // Append the image if selected
 
     try {
-      setIsSubmitting(true); // Disable the button while submitting
-      // Send the post data and image to the backend
-      const response = await axios.post(API_ENDPOINTS.POSTS, postData, {
+      const response = await axios.post(`${API_ENDPOINTS.POSTS}`, postData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      router.push('/dashboard'); // Redirect to dashboard after creating post
+
+      // Assuming response contains the newly created post data or a success message
+      if (response.status === 200 || response.data.success) {
+        setSuccess('Post created successfully!'); // Show success message
+        router.push('/dashboard'); // Redirect to dashboard after creating post
+      } else {
+        // If response does not indicate success, show error
+        setError('Failed to create post. Please try again.');
+      }
     } catch (error) {
       console.error('Error creating post:', error);
       setError('Failed to create post. Please try again.');
@@ -69,6 +77,7 @@ export default function CreatePost() {
   return (
     <form className={styles['create-post-form']} onSubmit={handleSubmit}>
       {error && <div className={styles.error}>{error}</div>} {/* Show error message */}
+      {success && <div className={styles.success}>{success}</div>} {/* Show success message */}
       <input
         type="text"
         className={styles['create-post-input']}

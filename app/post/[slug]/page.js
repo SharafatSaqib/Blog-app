@@ -28,9 +28,14 @@ export default function Post() {
       const fetchPostById = async () => {
         setLoading(true);
         setError('');
+        if (!id) {
+          setError('Invalid Post ID');
+          setLoading(false);
+          return;
+        }
         try {
-          const response = await axios.get(`${API_ENDPOINTS.POSTS}${id}`);
-          setPost(response.data); 
+          const response = await axios.get(`${API_ENDPOINTS.POSTS}/${id}`);
+          setPost(response.data);
         } catch (err) {
           console.error('Error fetching post:', err);
           setError('Failed to load post. Please try again later.');
@@ -38,6 +43,7 @@ export default function Post() {
           setLoading(false);
         }
       };
+      
 
       fetchPostById();
     }
