@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { likePost, unlikePost } from '../../../store/reducers/userSlice'; 
 import styles from './Post.module.scss';
 import Head from 'next/head'; 
-
+import { API_ENDPOINTS } from '../utils/constants';
 export default function Post() {
   const dispatch = useDispatch();
   const { user, likedPosts } = useSelector((state) => state.user); 
@@ -29,7 +29,7 @@ export default function Post() {
         setLoading(true);
         setError('');
         try {
-          const response = await axios.get(`/api/posts/${id}`);
+          const response = await axios.get(`${API_ENDPOINTS.POSTS}${id}`);
           setPost(response.data); 
         } catch (err) {
           console.error('Error fetching post:', err);
