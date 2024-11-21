@@ -1,0 +1,79 @@
+// app/dashboard/CreatePost.module.scss
+
+.create-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
+    @media (max-width: 768px) {
+      padding: 1rem;
+    }
+  }
+  
+  .create-post-input,
+  .create-post-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    resize: none;
+  
+    &:focus {
+      outline: none;
+      border-color: #0070f3;
+      box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
+    }
+  }
+  
+  .create-post-textarea {
+    min-height: 100px;
+  }
+  
+  .create-post-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #0070f3;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #005bb5;
+    }
+  
+    &:active {
+      background-color: #003f8a;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .create-post-form {
+      width: 90%;
+    }
+  
+    .create-post-input,
+    .create-post-textarea {
+      font-size: 0.9rem;
+    }
+  
+    .create-post-button {
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .create-post-form {
+      max-width: 800px;
+    }
+  }
+  

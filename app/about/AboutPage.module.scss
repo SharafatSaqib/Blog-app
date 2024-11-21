@@ -1,0 +1,136 @@
+/* AboutPage.module.scss */
+.aboutPage {
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+    animation: fadeIn 1s ease-out;
+  }
+  
+  .title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 0.5s forwards; /* Title fades in */
+  }
+  
+  .description {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 1s forwards; /* Description fades in */
+  }
+  
+  .missionSection,
+  .teamSection {
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 1.5s forwards; /* Sections fade in */
+  }
+  
+  .subtitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 2s forwards; /* Subtitle fades in */
+  }
+  
+  .missionDescription {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .teamMembers {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeIn 1s ease-out 2.5s forwards; /* Team members fade in */
+  }
+  
+  .teamMember {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 250px;
+    text-align: center;
+    padding: 20px;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 3s forwards; /* Team member animations */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .teamMember:hover {
+    transform: translateY(-10px) scale(1.05); /* Slight scale-up effect */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+    background-color: #f0f0f0; /* Subtle background color change */
+  }
+  
+  .teamMemberImage {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 3.5s forwards; /* Image fades in */
+    transition: transform 0.3s ease; /* Smooth transition for image scaling */
+  }
+  
+  .teamMember:hover .teamMemberImage {
+    transform: scale(1.1); /* Image scales up on hover */
+  }
+  
+  .teamMemberName {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .teamMemberRole {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  
+  .teamMemberBio {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .teamMembers {
+      flex-direction: column;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
