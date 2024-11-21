@@ -1,4 +1,4 @@
-import clientPromise from '../../../lib/mongodb';
+import clientPromise from '../../lib/mongodb';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
