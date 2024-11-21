@@ -35,12 +35,6 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // Limit to 5MB
 });
 
-// Disable Next.js default body parser
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 // API handler
 export default async function handler(req, res) {
