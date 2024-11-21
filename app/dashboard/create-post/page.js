@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import styles from './CreatePost.module.scss'; // Import SCSS module
 import axios from 'axios';
-import { API_ENDPOINTS } from '../utils/constants';
+import { API_ENDPOINTS } from '../../../utils/constants';
 export default function CreatePost() {
   const dispatch = useDispatch();
   const router = useRouter();
