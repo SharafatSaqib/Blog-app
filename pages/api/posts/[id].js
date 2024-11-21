@@ -4,10 +4,10 @@ import { ObjectId } from 'mongodb';
 export default async function handler(req, res) {
   const { id } = req.query;
 
-  // Ensure only GET method is allowed
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: `Method ${req.method} not allowed` });
-  }
+  // // Ensure only GET method is allowed
+  // if (req.method !== 'GET') {
+  //   return res.status(405).json({ error: `Method ${req.method} not allowed` });
+  // }
 
   // Validate the provided ID
   if (!ObjectId.isValid(id)) {
