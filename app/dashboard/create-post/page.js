@@ -36,7 +36,7 @@ export default function CreatePost() {
   
     try {
       // Send the post data and image to the backend
-      const response = await fetch(API_ENDPOINTS.POSTS, postData, {
+      const response = await axios.post(API_ENDPOINTS.POSTS, postData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

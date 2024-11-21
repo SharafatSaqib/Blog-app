@@ -55,7 +55,7 @@ export default async function handler(req, res) {
   const collection = db.collection('posts');
 
   if (req.method === 'GET') {
-    // GET logic remains unchanged
+    d
     const { page = 1, limit = 5, userId } = req.query;
     const skip = (page - 1) * limit;
 
@@ -74,7 +74,6 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Failed to fetch posts', details: error.message });
     }
   } else if (req.method === 'POST') {
-    // Use Multer middleware to handle the file upload
     const uploadMiddleware = upload.single('image');
     uploadMiddleware(req, res, async (err) => {
       if (err) {
