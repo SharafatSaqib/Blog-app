@@ -2,13 +2,17 @@ import clientPromise from '../../../lib/mongodb';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { runMiddleware } from '../../../lib/cors'; // Import the runMiddleware helper
+import Cors from 'cors';
+
+// CORS Middleware setup
+const cors = Cors({
+  methods: ['GET', 'POST'],
+});
 
 // Configure Multer for file storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = 'public/uploads';
-    // Ensure the upload directory exists
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
@@ -20,20 +24,18 @@ const storage = multer.diskStorage({
   },
 });
 
-// Multer instance
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png/;
     const isValidType = allowedTypes.test(path.extname(file.originalname).toLowerCase()) && allowedTypes.test(file.mimetype);
-
     if (isValidType) {
       cb(null, true);
     } else {
       cb(new Error('Only .jpeg, .jpg, or .png files are allowed.'));
     }
   },
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit to 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
 
 // Disable Next.js default body parser
@@ -43,16 +45,17 @@ export const config = {
   },
 };
 
-// API handler
+// API handler with CORS middleware
 export default async function handler(req, res) {
-  // Apply CORS middleware to the request
-  await runMiddleware(req, res, cors);
+  // Apply CORS middleware
+  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve(result))));
 
   const client = await clientPromise;
   const db = client.db();
   const collection = db.collection('posts');
 
   if (req.method === 'GET') {
+    // GET logic remains unchanged
     const { page = 1, limit = 5, userId } = req.query;
     const skip = (page - 1) * limit;
 
@@ -71,15 +74,13 @@ export default async function handler(req, res) {
       res.status(500).json({ error: 'Failed to fetch posts', details: error.message });
     }
   } else if (req.method === 'POST') {
+    // Use Multer middleware to handle the file upload
     const uploadMiddleware = upload.single('image');
     uploadMiddleware(req, res, async (err) => {
       if (err) {
         console.error('Error during image upload:', err.message);
         return res.status(400).json({ error: err.message });
       }
-
-      console.log('Request body:', req.body);  // Log body fields
-      console.log('Uploaded file:', req.file);  // Log file data
 
       try {
         const { title, description, content, userId } = req.body;
@@ -111,6 +112,7 @@ export default async function handler(req, res) {
       }
     });
   } else {
-    res.status(405).json({ error: `Method ${req.method} not allowed` });
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 }
