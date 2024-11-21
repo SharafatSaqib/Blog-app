@@ -1,7 +1,7 @@
 import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export default async function handler(req, res) {
+export  async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method !== 'GET') {
